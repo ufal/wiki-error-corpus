@@ -99,13 +99,13 @@ class WikiRevisionDumpHandler(xml.sax.ContentHandler):
 
     if self.curr_tag == wiki_dump_tags['page']: 
       self.page_start = 0
-      self.file_handle.write(tag_end(wiki_dump_tags['page']+'\n')
+      self.file_handle.write(tag_end(wiki_dump_tags['page']+'\n'))
       self.file_handle.close()
       self.file_counter += 1
 
     if self.curr_tag == wiki_dump_tags['rev']: 
       self.revision_start = 0
-      self.file_handle.write(tag_end(wiki_dump_tags['rev']+'\n')
+      self.file_handle.write(tag_end(wiki_dump_tags['rev']+'\n'))
 
     if self.curr_tag == wiki_dump_tags['title']: self.page_title = 0
     if self.curr_tag == wiki_dump_tags['ns']: self.page_ns = 0
@@ -127,10 +127,10 @@ class WikiRevisionDumpHandler(xml.sax.ContentHandler):
     
     if self.curr_tag == wiki_dump_tags['title']:
       self.file_handle.write(surround_with_tag(wiki_dump_tags['title'], 
-                             self.content) + '\n')
+                             self.content) + '\n'))
     if self.curr_tag == wiki_dump_tags['ns']:
       self.file_handle.write(surround_with_tag(wiki_dump_tags['ns'], 
-                             self.content) + '\n')
+                             self.content) + '\n'))
 
     if self.curr_tag == wiki_dump_tags['id']:
       if self.rev_contrib_userid:
@@ -140,32 +140,32 @@ class WikiRevisionDumpHandler(xml.sax.ContentHandler):
       if self.page_id:
         self.page_id = 0
       self.file_handle.write(surround_with_tag(wiki_dump_tags['id'], 
-                             self.content) + '\n')
+                             self.content) + '\n'))
     
     if self.curr_tag == wiki_dump_tags['parentid']:
       self.file_handle.write(surround_with_tag(wiki_dump_tags['parentid'], 
-                             self.content) + '\n')
+                             self.content) + '\n'))
     if self.curr_tag == wiki_dump_tags['tstamp']:
       self.file_handle.write(surround_with_tag(wiki_dump_tags['tstamp'], 
-                             self.content) + '\n')
+                             self.content) + '\n'))
     if self.curr_tag == wiki_dump_tags['uname']:
       self.file_handle.write(surround_with_tag(wiki_dump_tags['uname'], 
-                             self.content) + '\n')
+                             self.content) + '\n'))
     if self.curr_tag == wiki_dump_tags['comment']:
       self.file_handle.write(surround_with_tag(wiki_dump_tags['comment'], 
-                             self.content) + '\n')
+                             self.content) + '\n'))
     if self.curr_tag == wiki_dump_tags['model']:
       self.file_handle.write(surround_with_tag(wiki_dump_tags['model'], 
-                             self.content) + '\n')
+                             self.content) + '\n'))
     if self.curr_tag == wiki_dump_tags['format']:
       self.file_handle.write(surround_with_tag(wiki_dump_tags['format'], 
-                             self.content) + '\n')
+                             self.content) + '\n'))
     if self.curr_tag == wiki_dump_tags['text']:
       self.file_handle.write(surround_with_tag(wiki_dump_tags['text'], 
-                             self.content) + '\n')
+                             self.content) + '\n'))
     if self.curr_tag == wiki_dump_tags['sha1']:
       self.file_handle.write(surround_with_tag(wiki_dump_tags['sha1'], 
-                             self.content) + '\n')
+                             self.content) + '\n'))
 
   @staticmethod    
   def surround_with_tag(tag, cont): return '<'+tag+'>'+cont+'</'+tag+'>'
