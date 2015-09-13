@@ -33,7 +33,7 @@ class WikiRevisionDumpHandler(xml.sax.ContentHandler):
       abspath = self.output_dir + '/' + fname
       print 'Writing to file: ', abspath 
       self.file_handle = codecs.open(abspath, 'w', 'utf-8')
-      self.file_handle.write(self.tag_start('page'))
+      self.file_handle.write(self.tag_start('page')+'\n')
     elif self.curr_tag in self.wiki_dump_tags:
       self.file_handle.write(self.tag_start(self.curr_tag))      
       
