@@ -1,9 +1,35 @@
+# -*- coding: utf-8 -*-
+
 """Divide the large XML revision dump file into per page revisions.
 
 """
 import codecs
 import os
 import xml.sax
+import xml.sax.saxutils
+
+
+html_escape_table = {
+  u'"': '&quot;',
+  u"'": '&apos;',
+  u'>': '&gt;',
+  u'<': '&lt;',
+  u'|': '&brvbar;',
+  u'\`': '&apos;',
+  u'‘': "&apos;",
+  u'’': "&apos;",
+  u'“': '&quot;',
+  u'”': '&quot;'
+}
+
+html_unescape_table = {v:k for k, v in html_escape_table.items()}
+
+def html_escape(text):
+  return xml.sax.saxutils.escape(text, html_escape_table)
+
+def html_unescape(text):
+  return xml.sax.saxutils.unescape(text, html_unescape_table)
+
 
 class WikiRevisionDumpHandler(xml.sax.ContentHandler):
   input_file = 'wiki.xml'
@@ -49,7 +75,7 @@ class WikiRevisionDumpHandler(xml.sax.ContentHandler):
   def characters(self, contents):
     self.content = contents  
     if self.curr_tag != 'page' and self.curr_tag in self.wiki_dump_tags:
-      self.file_handle.write(self.content)
+      self.file_handle.write(html_escape(self.content))
  
   @staticmethod    
   def surround_wih_tag(tag, cont): return '<'+tag+'>'+cont+'</'+tag+'>'
