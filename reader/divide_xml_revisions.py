@@ -10,12 +10,6 @@ import xml.sax.saxutils
 
 
 html_escape_table = {
-  u'"': '&quot;',
-  u"'": '&apos;',
-  u'>': '&gt;',
-  u'<': '&lt;',
-  u'|': '&brvbar;',
-  u'\`': '&apos;',
   u'‘': "&apos;",
   u'’': "&apos;",
   u'“': '&quot;',
