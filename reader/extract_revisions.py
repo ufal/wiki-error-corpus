@@ -89,10 +89,23 @@ class WikiRevisionHandler(xml.sax.ContentHandler):
       self.curr_rev.append(self.content)
     if self.curr_tag == 'timestamp' and self.ts_start:
       self.timestamps.append(self.content)
-      self.file_handle.write('[Revision timestamp: ' + self.content + ']\n')
+      #self.file_handle.write('[Revision timestamp: ' + self.content + ']\n')
     #if self.curr_tag != 'page' and self.curr_tag in self.wiki_dump_tags:
     #  self.file_handle.write(html_escape(self.content))
+
  
+class WikiRevErrorHandler(xml.sax.handler.ErrorHandler):
+
+  def error(self, exception):
+    pass
+
+  def fatalError(self, exception):
+    pass  
+  
+  def warning(self, exception):
+    pass
+
+
 
 if __name__ == '__main__':
   import argparse
@@ -107,6 +120,8 @@ if __name__ == '__main__':
   xml_parser = xml.sax.make_parser()
   
   revision_handler = WikiRevisionHandler(args.input_file, args.output_file)
+  wiki_err_handler = WikiRevErrorHandler()
   xml_parser.setContentHandler(revision_handler)
+  xml_parser.setErrorHandler(wiki_err_handler)
   xml_parser.parse(args.input_file)
 
