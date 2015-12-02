@@ -3,8 +3,24 @@
 """Utility functions.
 
 """
+from nltk.corpus import PlaintextCorpusReader
 import numpy as np
 import sys
+
+def get_sentences_for_text(corpus_root, filename):
+  """Segments the given text into sentences.
+
+  Args:
+    corpus_root: Directory in which the text file is residing.
+    filename: Name of the text file.
+
+  Returns:
+    Sentences in the given text. 
+
+  """
+  text = PlaintextCorpusReader(corpus_root, [filename])  
+  return text.sents()
+
 
 def levenshtein_distance(s, t):
   """Minimum edit distance between two strings.
