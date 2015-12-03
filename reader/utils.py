@@ -3,6 +3,8 @@
 """Utility functions.
 
 """
+import nltk.data
+from nltk.tokenize.regexp import WhitespaceTokenizer
 from nltk.corpus import PlaintextCorpusReader
 import numpy as np
 import sys
@@ -18,7 +20,8 @@ def get_sentences_for_text(corpus_root, filename):
     Sentences in the given text. 
 
   """
-  text = PlaintextCorpusReader(corpus_root, [filename])  
+  text = PlaintextCorpusReader(corpus_root, [filename], word_tokenizer=WhitespaceTokenizer(), 
+                               sent_tokenizer=nltk.data.LazyLoader('tokenizers/punkt/czech.pickle'))  
   return text.sents()
 
 
