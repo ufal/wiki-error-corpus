@@ -21,9 +21,8 @@ def get_sentences_for_text(corpus_root, filename):
 
   """
   text = PlaintextCorpusReader(corpus_root, [filename], word_tokenizer=WhitespaceTokenizer(), 
-                               sent_tokenizer=nltk.data.LazyLoader('tokenizers/punkt/czech.pickle'))  
+                               sent_tokenizer=nltk.data.LazyLoader('tokenizers/punkt/czech.pickle'))
   return text.sents()
-
 
 def levenshtein_distance(s, t):
   """Minimum edit distance between two strings.
@@ -43,7 +42,6 @@ def levenshtein_distance(s, t):
   if n == 0:
     return m
   d = np.zeros((m+1, n+1))
-  print d.shape
   d[:, 0] = np.arange(m+1)
   d[0, :] = np.arange(n+1)
   for j in range(1, n+1):
@@ -53,3 +51,16 @@ def levenshtein_distance(s, t):
       else:
         d[i][j] = min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1]+1)
   return int(d[m][n])
+
+
+if __name__ == '__main__':
+  corpus_root = '/net/cluster/TMP/loganathan/wiki_dump/cs/processing/stage3'
+  file_name = '0000000007.xml'
+  sentences = get_sentences_for_text(corpus_root, file_name)
+  try:
+    for s in sentences:
+      print s
+      print '\n----END----'
+  except AssertionError:
+    print 'Empty file'
+  
