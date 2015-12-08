@@ -4,25 +4,31 @@
 
 """
 
+import codecs
 import utils
 
-class ErrorSentence(object):
+class RevisionSentence(object):
   """Class for representing an error sentence together with original sentence.
 
   """
-  def __init__(self, orig_tokens, error_tokens):
-    self.tokens = None
-    self.set_error_sentence(orig_tokens, error_tokens)
+  def __init__(self, orig_tokens):
+    self.orig_tokens = orig_tokens
+    self.err_sen = []
 
-  def set_error_sentence(self, orig_tokens, error_tokens):
-    o_e_tokens = zip(orig_tokens, error_tokens)
-    self.tokens = []
-    for t in o_e_tokens:
-      if t[0] != t[1]:
-        self.tokens.append(t)
-      else:
-        self.tokens.append((t[0],))
-      
+  def add_err_sentence(self, err_tokens):
+    self.err_sen.append(err_tokens)
+
+  def contains_spelling_errors(self):
+    """Whether the earlier revisions of the same sentences have spelling errors.
+    
+    Returns:
+      bool: True or False
+
+    """
+    if len(self.err_sen) > 0:
+      return True
+    else:
+      return False
 
 class ErrorCorpus(object):
   """Class for representing the original text data with spelling errors.
@@ -35,6 +41,7 @@ class ErrorCorpus(object):
     self.num_rev = 0
   
   def create_corpus_from_wiki(self, corpus_root, filename, output_dir):
+    create_error_corpus = False
     sentences = utils.get_sentences_for_text(corpus_root, filename)
     if sentences == None:
       return
@@ -48,13 +55,14 @@ class ErrorCorpus(object):
         else:
           if self.num_rev == 1:
             if len(s_list) >= 1:
-              top_rev.append(s_list)
+              rev_sen = RevisionSentence(s_list)
+              top_rev.append(rev_sen)
           elif self.num_rev > 1:
             for r in top_rev:
-              if len(s_list) == len(r):
+              if len(s_list) == len(r.orig_tokens):
                 valid_errors = True
                 errors = False
-                old_curr_rev_sen = zip(r, s_list)
+                old_curr_rev_sen = zip(r.orig_tokens, s_list)
                 for t in old_curr_rev_sen:
                   dist = utils.levenshtein_distance(t[0], t[1])
                   if dist > 0 and dist <= self.max_dist:
@@ -63,24 +71,42 @@ class ErrorCorpus(object):
                     valid_errors = False
                     break
                 if errors == True and valid_errors == True:
-                  err_sen = ErrorSentence(r, s_list)
-                  print ' '.join(r)
-                  print ' '.join(s_list)
-                  print '\n\n'
+                  print 'errr'
+                  r.add_err_sentence(s_list)
+                  create_error_corpus = True
                   break
     except AssertionError:
       print 'Empty file'
+
+    if create_error_corpus == True:
+      with codecs.open(output_dir + '/' + filename, 'w', 'utf-8') as f:
+        for r in top_rev:
+          if r.contains_spelling_errors() == True:
+            orig_sen = ' '.join(r.orig_tokens)
+            err_as_sen = map(lambda x: ' '.join(x), r.err_sen)
+            orig_err_sen = [orig_sen] + err_as_sen
+            to_write = '####'.join(orig_err_sen)
+            f.write(to_write+'\n')
         
 
 
 if __name__ == '__main__':
-  import os
-  corpus_root = '/net/cluster/TMP/loganathan/wiki_dump/cs/processing/stage3'
-  for root, dirnames, filenames in os.walk(corpus_root):
-    for f in filenames:
-      err_corpus = ErrorCorpus()
-      print 'Extracting errors from: ', f
-      err_corpus.create_corpus_from_wiki(corpus_root, f, '')
+  import argparse
+  arg_parser = argparse.ArgumentParser(description='Script for extracting spelling errors from a revision history')
+  arg_parser.add_argument('corpus_root', help='The directory in which the revision file exists')
+  arg_parser.add_argument('input_file', help='Revision file')
+  arg_parser.add_argument('output_dir', help='Output directory')
+  args = arg_parser.parse_args()
+  err_corpus = ErrorCorpus()
+  err_corpus.create_corpus_from_wiki(args.corpus_root, args.input_file, args.output_dir)
+
+  #import os
+  #corpus_root = '/net/cluster/TMP/loganathan/wiki_dump/cs/processing/stage3'
+  #for root, dirnames, filenames in os.walk(corpus_root):
+  #  for f in filenames:
+  #    err_corpus = ErrorCorpus()
+  #    print 'Extracting errors from: ', f
+  #    err_corpus.create_corpus_from_wiki(corpus_root, f, '')
 
   #corpus_root = '/net/cluster/TMP/loganathan/wiki_dump/cs/processing/tmp_out'
   #file_name = 'hello.txt'
