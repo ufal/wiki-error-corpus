@@ -79,15 +79,15 @@ class ErrorCorpus(object):
       print 'Empty file'
 
     if create_error_corpus == True:
-      with codecs.open(output_dir + '/' + filename, 'w', 'utf-8') as f:
+      with codecs.open(output_dir + '/' + filename, 'w', 'utf-8', errors='ignore') as f:
         for r in top_rev:
           if r.contains_spelling_errors() == True:
             orig_sen = ' '.join(r.orig_tokens)
             err_as_sen = map(lambda x: ' '.join(x), r.err_sen)
             orig_err_sen = [orig_sen] + err_as_sen
             to_write = '####'.join(orig_err_sen)
-            f.write(to_write+'\n')
-        
+            to_write_uni = unicode(to_write, encoding='utf-8', errors='ignore')
+            f.write(to_write_uni + u'\n')
 
 
 if __name__ == '__main__':
