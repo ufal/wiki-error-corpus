@@ -10,7 +10,8 @@ html_escape_table = {
   u'‘': "&apos;",
   u'’': "&apos;",
   u'“': '&quot;',
-  u'”': '&quot;'
+  u'”': '&quot;',
+  u'&': '&amp;'
 }
 
 html_unescape_table = {v:k for k, v in html_escape_table.items()}
