@@ -5,6 +5,7 @@
 """
 
 import codecs
+import re
 import utils
 
 class RevisionSentence(object):
@@ -35,6 +36,7 @@ class ErrorCorpus(object):
 
   """
   max_dist = 3
+  min_sen_len = 3
 
   def __init__(self):
     self.corpus = None
@@ -42,6 +44,7 @@ class ErrorCorpus(object):
   
   def create_corpus_from_wiki(self, corpus_root, filename, output_dir):
     create_error_corpus = False
+    valid_word_pat = ur'(?u)^\w+$'
     sentences = utils.get_sentences_for_text(corpus_root, filename)
     if sentences == None:
       return
@@ -54,7 +57,7 @@ class ErrorCorpus(object):
           self.num_rev += 1
         else:
           if self.num_rev == 1:
-            if len(s_list) >= 1:
+            if len(s_list) >= self.min_sen_len:
               rev_sen = RevisionSentence(s_list)
               top_rev.append(rev_sen)
           elif self.num_rev > 1:
@@ -66,7 +69,11 @@ class ErrorCorpus(object):
                 for t in old_curr_rev_sen:
                   dist = utils.levenshtein_distance(t[0], t[1])
                   if dist > 0 and dist <= self.max_dist:
-                    errors = True
+                    # token must be a word 
+                    orig_uni = utils.to_unicode_or_bust(t[0])
+                    match = re.search(valid_word_pat, orig_uni)
+                    if match:
+                      errors = True
                   elif dist > self.max_dist:
                     valid_errors = False
                     break
@@ -88,7 +95,6 @@ class ErrorCorpus(object):
             to_write = '####'.join(orig_err_sen)
             to_write_uni = unicode(to_write, encoding='utf-8', errors='ignore')
             f.write(to_write_uni + u'\n')
-
 
 if __name__ == '__main__':
   import argparse

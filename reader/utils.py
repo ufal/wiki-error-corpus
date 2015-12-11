@@ -9,6 +9,26 @@ from nltk.corpus import PlaintextCorpusReader
 import numpy as np
 import sys
 
+
+def to_unicode_or_bust(s, encoding='utf-8'):
+  """Converts the bytestring in utf-8 to Unicode.
+
+  Credit: Method from 'Unicode in Python, Completely Demystified'.
+  
+  Args:
+    s: Bytestring
+    encoding: Encoding
+
+  Returns:
+    Return the Unicode version of the given bytestring
+
+  """
+  if isinstance(s, basestring):
+    if not isinstance(s, unicode):
+      s = unicode(s, encoding)
+  return s   
+
+
 def get_sentences_for_text(corpus_root, filename):
   """Segments the given text into sentences.
 
