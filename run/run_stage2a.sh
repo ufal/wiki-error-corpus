@@ -4,7 +4,7 @@
 # Input directory: Location of the stage2 directory 
 input_dir=$1
 
-# Output directory: stage2 output 
+# Output directory: stage2a output 
 output_dir=$2
 
 # Directory where the wiki-error-corpus github files are located

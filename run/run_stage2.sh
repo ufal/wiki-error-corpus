@@ -19,7 +19,7 @@ rm -rf ${output_dir}
 mkdir ${output_dir}
 
 pushd ${input_dir}
-for i in $(ls); do
+for i in $(find . -type f -size -16M -exec ls -1 {} \; | perl -npe 's/\.\///'); do
   echo "Processing file: ${i}"
   num_jobs=`qstat -u '*' | grep -P '^\d' | tr -s ' ' | cut -f4 -d' ' | grep ${usern} | wc -l`
   while [ $num_jobs -ge $max_jobs ]
