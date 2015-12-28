@@ -35,13 +35,17 @@ class ErrorCorpus(object):
   """Class for representing the original text data with spelling errors.
 
   """
+  lang = 'english'
   max_dist = 3
   min_sen_len = 3
 
-  def __init__(self):
+  def __init__(self, lang='english', max_edit_distance=3, min_sen_len=3):
     self.corpus = None
     self.num_rev = 0
-  
+    self.lang = lang
+    self.max_edit = max_edit_distance
+    self.min_sen_len = min_sen_len
+
   def create_corpus_from_wiki(self, corpus_root, filename, output_dir):
     create_error_corpus = False
     valid_word_pat = ur'(?u)^\w+$'
@@ -102,8 +106,11 @@ if __name__ == '__main__':
   arg_parser.add_argument('corpus_root', help='The directory in which the revision file exists')
   arg_parser.add_argument('input_file', help='Revision file')
   arg_parser.add_argument('output_dir', help='Output directory')
+  arg_parser.add_argument('lang', help='Language of the text data')
+  arg_parser.add_argument('max_edit', help='Maximum edit distance between the correct word and the misspelled work')
+
   args = arg_parser.parse_args()
-  err_corpus = ErrorCorpus()
+  err_corpus = ErrorCorpus(args.lang.lower(), args.max_edit)
   err_corpus.create_corpus_from_wiki(args.corpus_root, args.input_file, args.output_dir)
 
   #import os

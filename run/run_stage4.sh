@@ -9,6 +9,12 @@ output_dir=$2
 # Directory where the wiki-error-corpus github files are located
 code_root=$3
 
+# Language of the text content. Needed for segmenting/tokenizing the text.
+lang=$4
+
+# Maximum edit distance between the correct word and misspelled word.
+max_edit=$5
+
 # username 
 usern=`id -u -n`
 
@@ -31,6 +37,6 @@ for i in $(ls); do
       echo -e "\e[92mSubmitting again...\e[0m"
     fi
   done
-  qsub -S /bin/bash -wd ${output_dir} -p -200 -e /dev/null -o /dev/null  ${code_root}/run/stage4.sh ${i} ${input_dir} ${output_dir} ${code_root}
+  qsub -S /bin/bash -wd ${output_dir} -p -200 -e /dev/null -o /dev/null  ${code_root}/run/stage4.sh ${i} ${input_dir} ${output_dir} ${code_root} ${lang} ${max_edit}
 done
 popd

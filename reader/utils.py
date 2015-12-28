@@ -29,19 +29,22 @@ def to_unicode_or_bust(s, encoding='utf-8'):
   return s   
 
 
-def get_sentences_for_text(corpus_root, filename):
+def get_sentences_for_text(corpus_root, filename, lang='english'):
   """Segments the given text into sentences.
 
   Args:
     corpus_root: Directory in which the text file is residing.
     filename: Name of the text file.
+    lang: Tokenizer language. For possible values, look at:
+    ${NLTK_DATA}/tokenizers/punkt
 
   Returns:
     Sentences in the given text. 
 
   """
+  tokenizer_path = 'tokenizers/punkt/' + lang + '.pickle'
   text = PlaintextCorpusReader(corpus_root, [filename], word_tokenizer=WhitespaceTokenizer(), 
-                               sent_tokenizer=nltk.data.LazyLoader('tokenizers/punkt/czech.pickle'))
+                               sent_tokenizer=nltk.data.LazyLoader(tokenizer_path))
   return text.sents()
 
 def levenshtein_distance(s, t):
