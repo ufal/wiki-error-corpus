@@ -12,6 +12,6 @@ output_dir=$2
 code_root=$3
 
 rm -rf ${output_dir}
-mkdir ${output_dir}
+mkdir -p ${output_dir}
 
 nohup python ${code_root}/reader/divide_xml_revisions.py ${xml_dump} ${output_dir} > stage1.log &

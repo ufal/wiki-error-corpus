@@ -17,7 +17,7 @@ usern=`id -u -n`
 max_jobs=1000
 
 rm -rf ${output_dir}
-mkdir ${output_dir}
+mkdir -p ${output_dir}
 
 pushd ${input_dir}
 for i in $(ls); do

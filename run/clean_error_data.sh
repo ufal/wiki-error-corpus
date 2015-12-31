@@ -11,7 +11,7 @@ code_root=$3
 
 
 rm -rf ${output_dir}
-mkdir ${output_dir}
+mkdir -p ${output_dir}
 
 cat ${input_dir}/* > ${output_dir}/error_corpus_raw_dirty.txt
 
